@@ -1,6 +1,5 @@
 package disney.api.models.content;
 
-
 import disney.api.models.ImgData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -52,11 +51,12 @@ public class Character {
         this.history = history;
     }
 
+
+
+
     public void setImg(ImgData imgData) {
         this.fileName= imgData.getFileName();
-
         this.fileType= imgData.getFileType();
-
         this.data= imgData.getData();
     }
 }

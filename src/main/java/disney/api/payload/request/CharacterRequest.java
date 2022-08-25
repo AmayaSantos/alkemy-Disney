@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 @Data
 public class CharacterRequest {
 
+    private Long id;
+
     @NotBlank
     @Size(max = 20)
     private String name;

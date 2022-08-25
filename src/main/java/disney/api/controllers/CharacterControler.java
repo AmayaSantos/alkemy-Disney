@@ -5,15 +5,11 @@ import disney.api.payload.request.CharacterRequest;
 import disney.api.payload.response.CharacterResponse;
 import disney.api.payload.response.MessageResponse;
 import disney.api.services.CharacterService;
-import disney.api.services.Utils.ImageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -25,22 +21,39 @@ public class CharacterControler {
   @PostMapping("")
   @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<?> addCharacter(@ModelAttribute CharacterRequest characterRequest) {
-
     try {
-      Character character = characterService.saveCharacter(characterRequest);
-      characterService.storeImgInCharacter(character, characterRequest.getFile());
+      return ResponseEntity.ok(characterService.saveNewCharacter(characterRequest));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
-    return ResponseEntity.ok(new MessageResponse("Successful save Character!!"));
   }
 
-  @GetMapping("/{caharacter_id}")
+  @PostMapping("/{character_id}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-  public ResponseEntity<CharacterResponse> downloadFile(@PathVariable Long caharacter_id)  {
-    // Load file from database
-    Character character = characterService.getCharacter(caharacter_id);
+  public ResponseEntity<?> updateCharacter(CharacterRequest characterRequest,@PathVariable Long character_id)  {
+    try{
+      characterRequest.setId(character_id);
+      return ResponseEntity.ok().body(characterService.updateCharacter(characterRequest));
+    } catch (Exception e){
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
 
+  @DeleteMapping("/{character_id}")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<?> deleteCharacter(@PathVariable Long character_id)  {
+    try{
+      characterService.delete(character_id);
+      return ResponseEntity.ok().body("Delete Successful");
+    } catch (Exception e){
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  @GetMapping("/{character_id}")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<CharacterResponse> getCharacter(@PathVariable Long character_id)  {
+    Character character = characterService.getCharacter(character_id);
     return ResponseEntity.ok()
         .body(
             new CharacterResponse(
@@ -50,7 +63,6 @@ public class CharacterControler {
                     character.getWeight(),
                     character.getHistory(),
                     character.getData()));
-
   }
 
 }

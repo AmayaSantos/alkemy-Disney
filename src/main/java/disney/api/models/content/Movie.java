@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,11 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "id_personaje"))
     private List<Character> associatedCharacters;
 
-    @ManyToMany(mappedBy = "films", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "genero_pelicula",
+            joinColumns = @JoinColumn(name = "id_genero"),
+            inverseJoinColumns = @JoinColumn(name = "id_pelicula"))
     private List<Genre> genres;
 
     private String fileName;
@@ -51,9 +56,20 @@ public class Movie {
 
     public void setImg(ImgData imgData) {
         this.fileName= imgData.getFileName();
-
         this.fileType= imgData.getFileType();
-
         this.data= imgData.getData();
+    }
+
+    public void addCharacter(Character character) {
+        if (associatedCharacters.isEmpty()){
+            this.associatedCharacters = new ArrayList<>();
+        }
+        this.associatedCharacters.add(character);
+    }
+
+    public void deleteCharacter(Character character) {
+        if (associatedCharacters.contains(character)) {
+            this.associatedCharacters.remove(character);
+        }
     }
 }

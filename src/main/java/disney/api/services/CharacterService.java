@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class CharacterService {
@@ -19,25 +20,45 @@ public class CharacterService {
     private CharacterRepository characterRepository;
 
 
-    public Character saveCharacter(CharacterRequest characterRequest) {
+    public Character updateCharacter(CharacterRequest characterRequest) {
+        Character character ;
+        Optional<Character> optionalCharacter =
+        characterRepository.findOneByIdOrName(characterRequest.getId(), characterRequest.getName());
+        character = optionalCharacter.orElseGet(Character::new);
+        return saveCharacter(character,characterRequest);
+    }
 
+    public Character saveNewCharacter(CharacterRequest characterRequest) {
+        characterRepository.findOneByName(characterRequest.getName()).orElseThrow(
+                ()-> new RuntimeException("Could not store Character " + characterRequest.getName() +"is ready exist"));
+        Character character = new Character();
+        return saveCharacter(character,characterRequest);
+    }
+
+    private Character saveCharacter(Character character,CharacterRequest characterRequest){
         try {
-          Character character = new Character(characterRequest.getName(),characterRequest.getAge(),
-                  characterRequest.getWeight(),characterRequest.getHistory());
-          return characterRepository.save(character);
+          character.setName(character.getName());
+          character.setAge(characterRequest.getAge());
+          character.setWeight(characterRequest.getWeight());
+          character.setHistory(character.getHistory());
+
+          return storeImgInCharacter(characterRepository.save(character), characterRequest.getFile());
         } catch (Exception ex) {
             throw new RuntimeException("Could not store Character " + characterRequest.getName() + ". Please try again!", ex);
         }
     }
 
-    public void storeImgInCharacter(Character character, MultipartFile file) throws IOException {
+    private Character storeImgInCharacter(Character character, MultipartFile file) throws IOException {
             character.setImg(imgUtils.getImgData(file));
-            characterRepository.save(character);
-
+            return characterRepository.save(character);
     }
 
     public Character getCharacter(Long character_id) {
         return characterRepository.findById(character_id)
                 .orElseThrow(() -> new RuntimeException("File not found with id " + character_id));
+    }
+
+    public void delete(Long character_id) {
+        characterRepository.delete(characterRepository.findById(character_id).orElseThrow(() -> new RuntimeException("Error: Movie is not found.")));
     }
 }

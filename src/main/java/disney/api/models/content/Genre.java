@@ -21,11 +21,7 @@ public class Genre {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "genero_pelicula",
-            joinColumns = @JoinColumn(name = "id_genero"),
-            inverseJoinColumns = @JoinColumn(name = "id_pelicula"))
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.EAGER)
     private List<Movie> films;
 
 
@@ -38,9 +34,7 @@ public class Genre {
 
     public void setImg(ImgData imgData) {
         this.fileName= imgData.getFileName();
-
         this.fileType= imgData.getFileType();
-
         this.data= imgData.getData();
     }
 }

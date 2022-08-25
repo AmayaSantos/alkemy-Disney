@@ -11,6 +11,8 @@ import java.util.Date;
 @Data
 public class MovieRequest {
 
+    private Long id;
+
     @NotBlank
     @Size(max = 20)
     private String title;
