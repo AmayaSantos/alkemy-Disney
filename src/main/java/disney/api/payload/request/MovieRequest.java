@@ -11,17 +11,16 @@ import java.util.Date;
 @Data
 public class MovieRequest {
 
-    private Long id;
+  private Long id;
 
-    @NotBlank
-    @Size(max = 20)
-    private String title;
+  @NotBlank
+  @Size(max = 20)
+  private String title;
 
-    private Date creation_date;
+  private Date creation_date;
 
-    @Range(min = 1,max = 5)
-    private Float qualification;
+  @Range(min = 1, max = 5)
+  private Float qualification;
 
-    private MultipartFile file;
-
+  private MultipartFile file;
 }

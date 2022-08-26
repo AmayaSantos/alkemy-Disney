@@ -15,26 +15,24 @@ import java.util.List;
 @Table(name = "ganeros")
 public class Genre {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String name;
+  private String name;
 
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.EAGER)
-    private List<Movie> films;
+  @ManyToMany(mappedBy = "genres", fetch = FetchType.EAGER)
+  private List<Movie> films;
 
+  private String fileName;
 
-    private String fileName;
+  private String fileType;
 
-    private String fileType;
+  @Lob private byte[] data;
 
-    @Lob
-    private byte[] data;
-
-    public void setImg(ImgData imgData) {
-        this.fileName= imgData.getFileName();
-        this.fileType= imgData.getFileType();
-        this.data= imgData.getData();
-    }
+  public void setImg(ImgData imgData) {
+    this.fileName = imgData.getFileName();
+    this.fileType = imgData.getFileType();
+    this.data = imgData.getData();
+  }
 }

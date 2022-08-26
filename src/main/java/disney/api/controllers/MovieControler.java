@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/movies")
 public class MovieControler {
 
-  @Autowired
-  MovieService movieService;
+  @Autowired MovieService movieService;
 
   @PostMapping("")
   @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -28,13 +27,14 @@ public class MovieControler {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
+
   @PostMapping("/{movie_id}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-  public ResponseEntity<?> updateMovie(MovieRequest movieRequest, @PathVariable Long movie_id)  {
-    try{
+  public ResponseEntity<?> updateMovie(MovieRequest movieRequest, @PathVariable Long movie_id) {
+    try {
       movieRequest.setId(movie_id);
       return ResponseEntity.ok().body(movieService.updateMovie(movieRequest));
-    } catch (Exception e){
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -58,22 +58,24 @@ public class MovieControler {
 
   @PostMapping("/{movie_id}/character/{character_id}")
   @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-  public ResponseEntity<?> addCharacterToMovie(@PathVariable Long movie_id,@PathVariable Long character_id){
-    try{
+  public ResponseEntity<?> addCharacterToMovie(
+      @PathVariable Long movie_id, @PathVariable Long character_id) {
+    try {
       Movie movie = movieService.addCharacterToMovie(movie_id, character_id);
       return ResponseEntity.ok().body(movie);
-    }catch (Exception e){
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
 
   @DeleteMapping("/{movie_id}/character/{character_id}")
   @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-  public ResponseEntity<?> deleteCharacterToMovie(@PathVariable Long movie_id,@PathVariable Long character_id){
-    try{
+  public ResponseEntity<?> deleteCharacterToMovie(
+      @PathVariable Long movie_id, @PathVariable Long character_id) {
+    try {
       Movie movie = movieService.deleteCharacterToMovie(movie_id, character_id);
       return ResponseEntity.ok().body(movie);
-    }catch (Exception e){
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }

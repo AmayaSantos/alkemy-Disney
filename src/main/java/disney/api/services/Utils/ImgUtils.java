@@ -11,17 +11,15 @@ import java.io.IOException;
 
 @Component
 public class ImgUtils {
-    @Autowired
-    private ImageValidator imageValidator;
+  @Autowired private ImageValidator imageValidator;
 
-    public ImgData getImgData(MultipartFile file) throws RuntimeException, IOException {
-        Errors errors = new BeanPropertyBindingResult(file, "imgagen");
-        imageValidator.validate(file, errors);
+  public ImgData getImgData(MultipartFile file) throws RuntimeException, IOException {
+    Errors errors = new BeanPropertyBindingResult(file, "imgagen");
+    imageValidator.validate(file, errors);
 
-        if (errors.hasErrors()) {
-          throw new RuntimeException(errors.getAllErrors().toString());
-        }
-        return new ImgData( file.getOriginalFilename(),file.getContentType(), file.getBytes());
-
+    if (errors.hasErrors()) {
+      throw new RuntimeException(errors.getAllErrors().toString());
     }
+    return new ImgData(file.getOriginalFilename(), file.getContentType(), file.getBytes());
+  }
 }

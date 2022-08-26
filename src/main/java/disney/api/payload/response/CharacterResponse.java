@@ -1,21 +1,19 @@
 package disney.api.payload.response;
 
+import disney.api.models.content.Character;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class CharacterResponse {
-    private Long id;
 
-    private String name;
+  private String name;
 
-    private Integer age;
+  private byte[] img;
 
-    private Integer weight;
-
-    private String history;
-
-    private byte[] img;
-
+  public CharacterResponse(Character character) {
+    this.name = character.getName();
+    this.img = character.getData();
+  }
 }

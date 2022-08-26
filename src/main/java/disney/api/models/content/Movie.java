@@ -20,56 +20,55 @@ import java.util.List;
 @Table(name = "pelicula")
 public class Movie {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NotBlank
-    @Size(max = 20)
-    private String title;
+  @NotBlank
+  @Size(max = 20)
+  private String title;
 
-    private Date creation_date;
+  private Date creation_date;
 
-    @Range(min = 1,max = 5)
-    private Float qualification;
+  @Range(min = 1, max = 5)
+  private Float qualification;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "pelicula_personaje",
-            joinColumns = @JoinColumn(name = "id_pelicula"),
-            inverseJoinColumns = @JoinColumn(name = "id_personaje"))
-    private List<Character> associatedCharacters;
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+      name = "pelicula_personaje",
+      joinColumns = @JoinColumn(name = "id_pelicula"),
+      inverseJoinColumns = @JoinColumn(name = "id_personaje"))
+  private List<Character> associatedCharacters;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "genero_pelicula",
-            joinColumns = @JoinColumn(name = "id_genero"),
-            inverseJoinColumns = @JoinColumn(name = "id_pelicula"))
-    private List<Genre> genres;
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "genero_pelicula",
+      joinColumns = @JoinColumn(name = "id_genero"),
+      inverseJoinColumns = @JoinColumn(name = "id_pelicula"))
+  private List<Genre> genres;
 
-    private String fileName;
+  private String fileName;
 
-    private String fileType;
+  private String fileType;
 
-    @Lob
-    private byte[] data;
+  @Lob private byte[] data;
 
-    public void setImg(ImgData imgData) {
-        this.fileName= imgData.getFileName();
-        this.fileType= imgData.getFileType();
-        this.data= imgData.getData();
+  public void setImg(ImgData imgData) {
+    this.fileName = imgData.getFileName();
+    this.fileType = imgData.getFileType();
+    this.data = imgData.getData();
+  }
+
+  public void addCharacter(Character character) {
+    if (associatedCharacters.isEmpty()) {
+      this.associatedCharacters = new ArrayList<>();
     }
+    this.associatedCharacters.add(character);
+  }
 
-    public void addCharacter(Character character) {
-        if (associatedCharacters.isEmpty()){
-            this.associatedCharacters = new ArrayList<>();
-        }
-        this.associatedCharacters.add(character);
+  public void deleteCharacter(Character character) {
+    if (associatedCharacters.contains(character)) {
+      this.associatedCharacters.remove(character);
     }
-
-    public void deleteCharacter(Character character) {
-        if (associatedCharacters.contains(character)) {
-            this.associatedCharacters.remove(character);
-        }
-    }
+  }
 }

@@ -17,46 +17,42 @@ import java.util.List;
 @Entity
 @Table(name = "personajes")
 public class Character {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NotBlank
-    @Size(max = 20)
-    private String name;
+  @NotBlank
+  @Size(max = 20)
+  private String name;
 
-    @Range(min = 0,max = 120)
-    private Integer age;
+  @Range(min = 0, max = 120)
+  private Integer age;
 
-    private Integer weight;
+  private Integer weight;
 
-    @NotBlank
-    @Size(max = 500)
-    private String history;
+  @NotBlank
+  @Size(max = 500)
+  private String history;
 
-    @ManyToMany(mappedBy = "associatedCharacters", fetch = FetchType.EAGER)
-    private List<Movie> films;
+  @ManyToMany(mappedBy = "associatedCharacters", fetch = FetchType.EAGER)
+  private List<Movie> films;
 
-    private String fileName;
+  private String fileName;
 
-    private String fileType;
+  private String fileType;
 
-    @Lob
-    private byte[] data;
+  @Lob private byte[] data;
 
-    public Character(String name, Integer age, Integer weight, String history) {
-        this.name = name;
-        this.age = age;
-        this.weight = weight;
-        this.history = history;
-    }
+  public Character(String name, Integer age, Integer weight, String history) {
+    this.name = name;
+    this.age = age;
+    this.weight = weight;
+    this.history = history;
+  }
 
-
-
-
-    public void setImg(ImgData imgData) {
-        this.fileName= imgData.getFileName();
-        this.fileType= imgData.getFileType();
-        this.data= imgData.getData();
-    }
+  public void setImg(ImgData imgData) {
+    this.fileName = imgData.getFileName();
+    this.fileType = imgData.getFileType();
+    this.data = imgData.getData();
+  }
 }
