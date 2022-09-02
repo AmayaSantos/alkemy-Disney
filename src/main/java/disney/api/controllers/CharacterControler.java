@@ -87,5 +87,4 @@ public class CharacterControler {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
-
 }

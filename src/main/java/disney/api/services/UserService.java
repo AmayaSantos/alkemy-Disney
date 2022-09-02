@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-  @Autowired
-  PasswordEncoder encoder;
+  @Autowired PasswordEncoder encoder;
 
   @Autowired UserRepository userRepository;
 
@@ -50,14 +49,17 @@ public class UserService {
     userRepository.save(user);
   }
 
-    public User getUser(Long idUser) {
-      return userRepository.findById(idUser)
-                      .orElseThrow(() -> new RuntimeException("Error: User is not found."));
-    }
+  public User getUser(Long idUser) {
+    return userRepository
+        .findById(idUser)
+        .orElseThrow(() -> new RuntimeException("Error: User is not found."));
+  }
 
   public void changePass(String name, String pass, String repass, String oldpass) {
     if (pass.equals(repass)) throw new RuntimeException("Plis  inset same pass and repass");
-    User user=userRepository.findOneByUsernameAndPassword(name, encoder.encode(oldpass))
+    User user =
+        userRepository
+            .findOneByUsernameAndPassword(name, encoder.encode(oldpass))
             .orElseThrow(() -> new RuntimeException("Error: User Bad Credentials."));
     user.setPassword(encoder.encode(pass));
   }
