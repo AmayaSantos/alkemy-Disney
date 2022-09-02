@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,8 +31,6 @@ public class SessionController {
   @Autowired AuthenticationManager authenticationManager;
 
   @Autowired UserService userService;
-
-  @Autowired PasswordEncoder encoder;
 
   @Autowired JwtUtils jwtUtils;
 
@@ -46,7 +45,7 @@ public class SessionController {
     userService.register(
         registerRequest.getUsername(),
         registerRequest.getEmail(),
-        encoder.encode(registerRequest.getPassword()));
+        registerRequest.getPassword());
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
@@ -83,4 +82,28 @@ public class SessionController {
     }
     return ResponseEntity.ok(new MessageResponse("User ROLE asigned!!"));
   }
+
+  @GetMapping("/{id_user}")
+  public ResponseEntity<?> agetUser(
+          @PathVariable Long id_user) {
+    try {
+      return ResponseEntity.ok(userService.getUser(id_user));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  @PostMapping("/updatePass")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<?> changePass( @RequestParam("pass") String pass,
+                                       @RequestParam("repass") String repass,
+                                       @RequestParam("oldpass") String oldpass) {
+    try {
+      userService.changePass(SecurityContextHolder.getContext().getAuthentication().getName(),pass ,repass ,oldpass);
+      return ResponseEntity.ok().body("Susccesfull Pass Cahanged");
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
 }
